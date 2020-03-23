@@ -98,6 +98,379 @@ class ClassService extends Service {
     })
     return res
   }
+  // 获取当前课程教学进度
+  async getClassProcess (classId) {
+    const { app } = this;
+    const mes = await app.mysql.select('classProcess', { 
+      where: { classId },
+      orders:[['processTime', 'asc']] 
+    });
+    if (mes) {
+      return {
+        code: 1,
+        mes
+      }
+    } else {
+      return {
+        code: 2,
+        mes: '查询失败'
+      }
+    }
+  }
+  // 更新教学进度
+  async updateProcess (query) {
+    const { app } = this;
+    const options = {
+      where: {
+        id: query.id,
+      },
+    };
+    const row = {
+      processValue: query.processValue,
+      processType: query.processType,
+      processTime: query.processTime
+    };
+    const result = await app.mysql.update('classProcess', row, options);
+    return result
+  }
+  // 增加教学进度
+  async addProcess (query) {
+    const { app } = this;
+    const res = await app.mysql.insert('classProcess', {
+      classId: query.classId,
+      processValue: query.processValue,
+      processType: query.processType,
+      processTime: query.processTime
+    });
+    return res
+  }
+  // 删除教学进度
+  async deleteProcess(query) {
+    const { app } = this;
+    const res = await app.mysql.delete('classProcess', {
+      id: query.processId
+    })
+    return res
+  }
+  // 获取课程通知列表
+  async getClassNotice (classId) {
+    const { app } = this;
+    const mes = await app.mysql.select('classNotice', { 
+      where: { classId },
+      orders:[['time', 'desc']] 
+    });
+    if (mes) {
+      return {
+        code: 1,
+        mes
+      }
+    } else {
+      return {
+        code: 2,
+        mes: '查询失败'
+      }
+    }
+  }
+  // 获取教学通知详细信息
+  async getNotice (id) {
+    const { app } = this;
+    const mes = await app.mysql.get('classNotice', { id });
+    if (mes) {
+      return {
+        code: 1,
+        mes
+      }
+    } else {
+      return {
+        code: 2,
+        mes: '查询失败'
+      }
+    }
+  }
+  // 更新教学进度
+  async updateNotice (query) {
+    const { app } = this;
+    const options = {
+      where: {
+        id: query.noticeId,
+      },
+    };
+    const row = {
+      noticeContent: query.noticeContent,
+      noticeTitle: query.noticeTitle,
+      time: query.time
+    };
+    const result = await app.mysql.update('classNotice', row, options);
+    return result
+  }
+  // 增加教学通知
+  async addNotice (query) {
+    const { app } = this;
+    const res = await app.mysql.insert('classNotice', {
+      classId: query.classId,
+      noticeTitle: query.noticeTitle,
+      noticeContent: query.noticeContent,
+      time: query.time
+    });
+    return res
+  }
+  // 删除教学通知
+  async deleteNotice(query) {
+    const { app } = this;
+    const res = await app.mysql.delete('classNotice', {
+      id: query.noticeId
+    })
+    return res
+  }
+
+  // 获取作业列表
+  async getClassWork(classId) {
+    const { app } = this;
+    const mes = await app.mysql.select('classWork', { 
+      where: { classId },
+      orders:[['time', 'desc']] 
+    });
+    if (mes) {
+      return {
+        code: 1,
+        mes
+      }
+    } else {
+      return {
+        code: 2,
+        mes: '查询失败'
+      }
+    }
+  }
+  // 获取作业详细信息
+  async getWork (id) {
+    const { app } = this;
+    const mes = await app.mysql.get('classWork', { id });
+    if (mes) {
+      return {
+        code: 1,
+        mes
+      }
+    } else {
+      return {
+        code: 2,
+        mes: '查询失败'
+      }
+    }
+  }
+  // 更新作业
+  async updateWork (query) {
+    const { app } = this;
+    const options = {
+      where: {
+        id: query.workId,
+      },
+    };
+    const row = {
+      workContent: query.workContent,
+      workTitle: query.workTitle,
+      endtime: query.endTime
+    };
+    const result = await app.mysql.update('classWork', row, options);
+    return result
+  }
+  // 增加作业
+  async addWork (query) {
+    const { app } = this;
+    const res = await app.mysql.insert('classWork', {
+      classId: query.classId,
+      workTitle: query.workTitle,
+      workContent: query.workContent,
+      endTime: query.endTime,
+      time: query.time
+    });
+    return res
+  }
+  // 删除作业
+  async deleteWork(query) {
+    const { app } = this;
+    const res = await app.mysql.delete('classWork', {
+      id: query.id
+    })
+    return res
+  }
+  // 获取当前提交作业状态
+  async getWorkStatus (query) {
+    const { app } = this;
+    const mes = await app.mysql.select('workSubmit', { 
+      where: { workId: query.workId, studentId: query.studentId },
+    });
+    if (mes) {
+      return {
+        code: 1,
+        mes
+      }
+    } else {
+      return {
+        code: 2,
+        mes: '查询失败'
+      }
+    }
+  }
+
+  // 获取课程所有的选课学生
+  async getClassStudent (query) {
+    const { app } = this;
+    const res = await app.mysql.select('classChoose', { 
+      where: { id: query },
+    });
+    return res
+  }
+
+  // 更新作业的回答
+  async updateAnswer (query) {
+    const { app } = this;
+    const options = {
+      where: {
+        id: query.id,
+      },
+    };
+    const row = {
+      workValue: query.workValue,
+      lastSubmitTime: query.lastSubmitTime,
+      point: query.point || NULL
+    };
+    const result = await app.mysql.update('workSubmit', row, options);
+    return result
+  }
+
+  // 提交新作业的回答
+  async addAnswer (query) {
+    const { app } = this;
+    const res = await app.mysql.insert('workSubmit', {
+      workId: query.workId,
+      studentId: query.studentId,
+      workValue: query.workValue,
+      lastSubmitTime: query.lastSubmitTime
+    });
+    return res
+  }
+
+  // 获取所有帖子
+  async getPostList (classId) {
+    const { app } = this;
+    const mes = await app.mysql.select('post', { 
+      where: { classId },
+      orders:[['postTime', 'desc']] 
+    });
+    if (mes) {
+      return {
+        code: 1,
+        mes
+      }
+    } else {
+      return {
+        code: 2,
+        mes: '查询失败'
+      }
+    }
+  }
+
+  // 发表帖子
+  async addPost (query) {
+    const { app } = this;
+    const res = await app.mysql.insert('post', {
+      userId: query.userId,
+      userName: query.userName,
+      classId: query.classId,
+      postTitle: query.postTitle,
+      postContent: query.postContent,
+      imgUrl: query.imgUrl,
+      postTime: query.postTime
+    });
+    return res
+  }
+
+  // 更新帖子
+  async updatePost (query) {
+    const { app } = this;
+    const options = {
+      where: {
+        id: query.postId,
+      },
+    };
+    const row = {
+      postContent: query.postContent,
+      postTitle: query.postTitle,
+      postTime: query.postTime,
+      imgUrl: query.imgUrl
+    };
+    const result = await app.mysql.update('post', row, options);
+    return result
+  }
+
+  // 删除帖子
+  async deletePost(query) {
+    const { app } = this;
+    const res = await app.mysql.delete('post', {
+      id: query.id
+    })
+    return res
+  }
+  
+  // 获取帖子详情
+  async getPost (query) {
+    const { app } = this;
+    const mes = await app.mysql.get('post', { id: query });
+    if (mes) {
+      return {
+        code: 1,
+        mes
+      }
+    } else {
+      return {
+        code: 2,
+        mes: '查询失败'
+      }
+    }
+  }
+
+  // 获取帖子所有的评论
+  async getPostReply (query) {
+    const { app } = this;
+    const mes = await app.mysql.select('reply', { 
+      where: { postId: query.postId },
+      orders:[['replyTime', 'desc']] 
+    });
+    if (mes) {
+      return {
+        code: 1,
+        mes
+      }
+    } else {
+      return {
+        code: 2,
+        mes: '查询失败'
+      }
+    }
+  }
+
+  // 发表评论
+  async addReply (query) {
+    const { app } = this;
+    const res = await app.mysql.insert('reply', {
+      postId: query.postId,
+      replyUser: query.userId,
+      replyContent: query.replyContent,
+      replyTime: query.replyTime,
+      replyName: query.replyName
+    });
+    return res
+  }
+
+  // 删除评论
+  async deleteReply(query) {
+    const { app } = this;
+    const res = await app.mysql.delete('reply', {
+      id: query.id
+    })
+    return res
+  }
 }
 
 module.exports = ClassService;

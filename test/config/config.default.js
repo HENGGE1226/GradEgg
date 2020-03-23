@@ -10,6 +10,7 @@ module.exports = appInfo => {
   const config = exports = {};
   config.keys = appInfo.name + '_1583323097097_1212';
   config.middleware = [];
+  // 连接数据库
   config.mysql = {
     client: {
       // host
@@ -28,9 +29,11 @@ module.exports = appInfo => {
     // 是否加载到 agent 上，默认关闭
     agent: false,
   };
+  // 配置token的秘钥
   config.jwt = {
     secret: "ygh1226"
   }
+  // 配置连接安全性及解决跨域
   config.security = {
     csrf: {
       enable: false,
