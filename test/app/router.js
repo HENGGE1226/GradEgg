@@ -30,6 +30,12 @@ module.exports = app => {
   router.get('/getUploadToken', checkAuth(), controller.uploadToken.getToken);
   // 创建课程
   router.post('/createClass', checkAuth(), checkTeacherAuth(), controller.class.createClass);
+  // 删除课程
+  router.post('/deleteClass', checkAuth(), checkTeacherAuth(), controller.class.deleteClass);
+  // 开启课程
+  router.post('/openClass', checkAuth(), checkTeacherAuth(), controller.class.openClass);
+  // 关闭课程
+  router.post('/offClass', checkAuth(), checkTeacherAuth(), controller.class.offClass);
   // 搜索所有课程
   router.post('/queryClass', controller.class.queryClass);
   // 查询单一课程的详细信息
@@ -38,6 +44,8 @@ module.exports = app => {
   router.post('/checkChooseAuth', checkAuth(), checkStudentAuth(), checkChooseAuth(), controller.class.checkChooseAuth);
   // 选择课程
   router.post('/chooseClass', checkAuth(), checkStudentAuth(), checkChooseAuth(), controller.class.chooseClass);
+  // 退课
+  router.post('/quitClass', checkAuth(), checkStudentAuth(), controller.class.quitClass);
   // 获取个人课程列表
   router.post('/getUserClass', checkAuth(), controller.class.getUserClass);
   // 获取课程当前教学进度
@@ -87,4 +95,11 @@ module.exports = app => {
   router.post('/submitReply', checkAuth(), controller.class.submitReply);
   // 删除评论
   router.post('/deleteReply', checkAuth(), controller.class.deleteReply);
+  // 获取资源列表
+  router.post('/getResourceList', checkAuth(), controller.class.getResourceList);
+  // 上传资源
+  router.post('/uploadResource', checkAuth(), controller.class.uploadResource);
+  // 删除资源
+  router.post('/deleteResource', checkAuth(), controller.class.deleteResource);
+
 };

@@ -11,7 +11,6 @@ class ClassService extends Service {
       classId: data.classId,
       year: data.time[0],
       season: data.season,
-      limted: data.limiteNum,
       img: data.imgUrl,
       introduce: data.classIntro,
       teacherId: data.teacherId,
@@ -20,6 +19,31 @@ class ClassService extends Service {
     });
     return result;
   }
+
+  // 删除课程
+  async deleteClass(query) {
+    const { app } = this;
+    const res = await app.mysql.delete('class', {
+      id: query.classId
+    })
+    return res
+  }
+
+  // 更新课程状态
+  async updateClassStatus (query) {
+    const { app } = this;
+    const options = {
+      where: {
+        id: query.classId,
+      },
+    };
+    const row = {
+      classStatus: query.status
+    };
+    const result = await app.mysql.update('class', row, options);
+    return result
+  }
+
   // 查找课程
   async queryClass (data) {
     const { app } = this;
@@ -89,6 +113,17 @@ class ClassService extends Service {
     })
     return res
   }
+
+  // 退课
+  async quitClass (classId, userId) {
+    const { app } = this;
+    const res = await app.mysql.delete('classChoose', {
+      id: classId,
+      studentId: userId,
+    })
+    return res
+  }
+
   // 获取用户选的课程列表
   async getUserClass (userId) {
     const { app } = this;
@@ -471,6 +506,50 @@ class ClassService extends Service {
     })
     return res
   }
+
+  // 上传资源
+  async uploadResource(query) {
+    const { app } = this;
+    const res = await app.mysql.insert('classResource', {
+      userId: query.userId,
+      type: query.type,
+      name: query.name,
+      classId: query.classId,
+      address: query.address,
+      time: query.time
+    });
+    return res
+  }
+
+  // 获取资源列表
+  async getResourceList (classId) {
+    const { app } = this;
+    const mes = await app.mysql.select('classResource', { 
+      where: { classId },
+      orders:[['time', 'desc']] 
+    });
+    if (mes) {
+      return {
+        code: 1,
+        mes
+      }
+    } else {
+      return {
+        code: 2,
+        mes: '查询失败'
+      }
+    }
+  }
+
+  // 删除资源
+  async deleteResource(query) {
+    const { app } = this;
+    const res = await app.mysql.delete('classResource', {
+      id: query.id
+    })
+    return res
+  }
+
 }
 
 module.exports = ClassService;

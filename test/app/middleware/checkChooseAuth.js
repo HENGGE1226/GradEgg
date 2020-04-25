@@ -9,18 +9,8 @@ module.exports = () => {
         const classId = ctx.request.body.id;
         const res = await ctx.service.class.checkChooseAuth(classId, userId);
         if (res.classResult) {
-          const { studentNum, limted } = res.classResult;
-          console.log('dasdasdas', studentNum, limted)
           if(res.chooseResult.length === 0) {
-            if(limted > studentNum) {
-              await next();
-            } else {
-              ctx.body = {
-                code: 403,
-                classType: 2,
-                mes: '课程已选满'
-              }
-            }
+            await next();
           } else {
             ctx.body = {
               code: 200,

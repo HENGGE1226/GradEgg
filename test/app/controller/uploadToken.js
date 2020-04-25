@@ -9,7 +9,7 @@ class UploadTokenController extends Controller {
     try {
       const accessKey = 'm6EMqUV3XwiRkwG9w-mVH-HaJrg001htFSXtbqx8';
       const secretKey = 'EM87f2vkkgfiI5pQ_7oKA3SZYhzF4nreRWyawjoI';
-      const bucket = 'ygh';
+      const bucket = 'ygh2';
       const mac = new qiniu.auth.digest.Mac(accessKey, secretKey);    
       const options = {
         scope: bucket,

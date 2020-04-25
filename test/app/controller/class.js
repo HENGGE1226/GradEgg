@@ -32,6 +32,65 @@ class ClassController extends Controller {
     }
   }
 
+  // 删除课程
+  async deleteClass() {
+    const { ctx } = this;
+    const query = ctx.request.body;
+    const res = await ctx.service.class.deleteClass(query);
+    if (res.affectedRows === 1) {
+      ctx.body = {
+        code: 200,
+        res: '删除成功'
+      }
+    } else {
+      console.log(res)
+      ctx.body = {
+        code: 201,
+        res: '删除失败'
+      }
+    }
+  }
+
+  // 开启课程
+  async openClass() {
+    const { ctx } = this;
+    const query = ctx.request.body;
+    query.status = 'open';
+    const res = await ctx.service.class.updateClassStatus(query);
+    if (res.affectedRows === 1) {
+      ctx.body = {
+        code: 200,
+        res: '更新成功'
+      }
+    } else {
+      console.log(res)
+      ctx.body = {
+        code: 201,
+        res: '更新失败'
+      }
+    }
+  }
+
+  // 关闭课程
+  async offClass() {
+    const { ctx } = this;
+    const query = ctx.request.body;
+    query.status = 'off';
+    const res = await ctx.service.class.updateClassStatus(query);
+    if (res.affectedRows === 1) {
+      ctx.body = {
+        code: 200,
+        res: '更新成功'
+      }
+    } else {
+      console.log(res)
+      ctx.body = {
+        code: 201,
+        res: '更新失败'
+      }
+    }
+  }
+
   // 搜索课程
   async queryClass() {
     const { ctx } = this;
@@ -103,6 +162,26 @@ class ClassController extends Controller {
       ctx.body = {
         code: 403,
         mes: '选课失败',
+        reson: result.affectedRows
+      }
+    }
+  }
+
+  // 退出课程 
+  async quitClass() {
+    const { ctx } = this;
+    const classId = ctx.request.body.classId;
+    const res = await ctx.service.class.quitClass(classId, ctx.id);
+    if(res.affectedRows === 1) {
+      ctx.body = {
+        code: 200,
+        mes: '成功'
+      }
+    } else {
+      ctx.status = 403;
+      ctx.body = {
+        code: 403,
+        mes: '失败',
         reson: result.affectedRows
       }
     }
@@ -771,6 +850,72 @@ class ClassController extends Controller {
     const { ctx } = this;
     const query = ctx.request.body;
     const res = await ctx.service.class.deleteReply(query);
+    if (res.affectedRows === 1) {
+      ctx.body = {
+        code: 200,
+        res: '删除成功'
+      }
+    } else {
+      console.log(res)
+      ctx.body = {
+        code: 201,
+        res: '删除失败'
+      }
+    }
+  }
+
+  // 上传资源
+  async uploadResource() {
+    const { ctx } = this;
+    const query = ctx.request.body;
+    const res = await ctx.service.class.uploadResource(query);
+    if (res.affectedRows === 1) {
+      ctx.body = {
+        code: 200,
+        res: '操作成功'
+      }
+    } else {
+      console.log(res)
+      ctx.body = {
+        code: 201,
+        res: '操作失败'
+      }
+    }
+  }
+
+  // 获取资源列表
+  async getResourceList() {
+    const { ctx } = this;
+    const query = ctx.request.body.classId;
+    try {
+      const res = await ctx.service.class.getResourceList(query);
+      if (res.code === 1) {
+        const result = res.mes
+        ctx.body = {
+          code: 200,
+          res: result
+        }
+      } else {
+        ctx.body = {
+          code: 201,
+          mes: '获取失败'
+        }
+      }
+    } catch (e) {
+      console.log(e)
+      ctx.status = 403;
+      ctx.body = {
+        code: 403,
+        mes: e
+      }
+    }
+  }
+
+  // 删除资源
+  async deleteResource() {
+    const { ctx } = this;
+    const query = ctx.request.body;
+    const res = await ctx.service.class.deleteResource(query);
     if (res.affectedRows === 1) {
       ctx.body = {
         code: 200,
